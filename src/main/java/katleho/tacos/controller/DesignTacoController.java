@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
+    @ModelAttribute
     public void addIngredientsToModel(Model model){
         List<Ingredient> ingredientList = Arrays.asList(
                 new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
