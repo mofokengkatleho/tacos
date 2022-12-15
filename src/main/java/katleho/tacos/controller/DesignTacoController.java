@@ -1,4 +1,4 @@
 package katleho.tacos.controller;
 
-public class DesigntacoController {
+public class DesignTacoController {
 }
