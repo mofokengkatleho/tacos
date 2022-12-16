@@ -35,7 +35,7 @@ public class IngredientByIdConverter  implements Converter<String,String> {
     }
 
     @Override
-    public String convert(String source) {
-        return null;
+    public String convert(String ingredientId) {
+        return ingredientMap.get(ingredientId);
     }
 }
