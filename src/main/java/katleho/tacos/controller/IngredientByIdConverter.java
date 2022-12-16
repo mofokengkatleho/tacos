@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class IngredientByIdConverter  implements Converter<String,String> {
+public class IngredientByIdConverter  implements Converter<String,Ingredient> {
     private Map<String, Ingredient> ingredientMap = new HashMap<>();
 
     public IngredientByIdConverter() {
@@ -35,7 +35,7 @@ public class IngredientByIdConverter  implements Converter<String,String> {
     }
 
     @Override
-    public String convert(String ingredientId) {
+    public Ingredient convert(String ingredientId) {
         return ingredientMap.get(ingredientId);
     }
 }
