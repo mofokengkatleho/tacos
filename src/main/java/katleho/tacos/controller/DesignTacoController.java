@@ -8,10 +8,7 @@ import katleho.tacos.model.TacoOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +21,7 @@ import java.util.stream.Collectors;
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
+    @ModelAttribute
     public void addIngredientsToModel(Model model){
         List<Ingredient> ingredientList = Arrays.asList(
                 new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
@@ -63,5 +61,13 @@ public class DesignTacoController {
     @GetMapping
     public String renderTacoDesignForm(){
         return "design";
+    }
+
+    @PostMapping
+    public String processTaco(Taco taco, @ModelAttribute TacoOrder tacoOrder){
+        tacoOrder.addTaco(taco);
+        log.info("Processing taco: {}",taco);
+
+        return "redirect:/orders/current";
     }
 }
