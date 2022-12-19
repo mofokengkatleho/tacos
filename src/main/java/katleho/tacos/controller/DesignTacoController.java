@@ -34,8 +34,8 @@ public class DesignTacoController {
     public void addIngredientsToModel(Model model){
         Iterable<Ingredient> ingredients = ingredientRepository.findAll();
         Arrays.stream(Ingredient.Type.values())
-                .forEach(ingredient -> model.addAttribute(ingredient.toString().toLowerCase(),
-                        filterByType(ingredients,ingredient)));
+                .forEach(ingredientType -> model.addAttribute(ingredientType.toString().toLowerCase(),
+                        filterByType(ingredients,ingredientType)));
     }
 
     private Iterable<Ingredient> filterByType(Iterable<Ingredient> ingredients, Type type){
