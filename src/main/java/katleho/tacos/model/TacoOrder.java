@@ -2,13 +2,17 @@ package katleho.tacos.model;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class TacoOrder {
+    @NotBlank(message = "Delivery name is required")
     private String deliveryName;
+    @NotBlank(message = "Street is required")
     private String deliveryStreet;
+    @NotBlank(message = "City is required")
     private String deliveryCity;
     private String deliveryState;
     private String deliveryZip;
