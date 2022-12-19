@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Controller
@@ -32,26 +33,13 @@ public class DesignTacoController {
     @ModelAttribute
     public void addIngredientsToModel(Model model){
         Iterable<Ingredient> ingredients = ingredientRepository.findAll();
-//        List<Ingredient> ingredientList = Arrays.asList(
-//                new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
-//                new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
-//                new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
-//                new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
-//                new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
-//                new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-//                new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
-//                new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
-//                new Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
-//                new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE)
-//        );
-
         Arrays.stream(Ingredient.Type.values())
                 .forEach(ingredient -> model.addAttribute(ingredient.toString().toLowerCase(),
                         filterByType(ingredients,ingredient)));
     }
 
     private Iterable<Ingredient> filterByType(Iterable<Ingredient> ingredients, Type type){
-        return ingredients
+        return StreamSupport.stream(ingredients.spliterator(),false)
                 .filter(ingredient -> ingredient.getType().equals(type))
                 .collect(Collectors.toList());
     }
