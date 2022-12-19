@@ -3,6 +3,7 @@ package katleho.tacos.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class TacoOrder {
     private String deliveryZip;
     @CreditCardNumber(message = "Not a valid credit card number")
     private String ccNumber;
+    @Pattern(regexp="^(0[1-9]|1[0-2])([\\/])([2-9][0-9])$", message="Must be formatted MM/YY")
     private String ccExpiration;
     private String ccCVV;
     private List<Taco> tacos = new ArrayList<>();
