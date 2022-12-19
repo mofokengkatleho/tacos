@@ -24,7 +24,7 @@ public class IngredientRepositoryImpl implements IngredientRepository{
 
     @Override
     public Optional<Ingredient> findById(String id) {
-        List<Ingredient> ingredientList = jdbcTemplate.query("Select name,id,type from Ingredients where id = ?",
+        List<Ingredient> ingredientList = jdbcTemplate.query("Select name,id,type from Ingredient where id = ?",
                 this::mapRowToIngredient,id);
         return ingredientList.size() != 0 ?
                 Optional.of(ingredientList.get(0))
@@ -33,7 +33,9 @@ public class IngredientRepositoryImpl implements IngredientRepository{
 
     @Override
     public Ingredient save(Ingredient ingredient) {
-        return null;
+        jdbcTemplate.update("insert into Ingredient (id,name,type) values (?,?,?)",
+                ingredient.getId(),ingredient.getName(),ingredient.getType().toString());
+        return ingredient;
     }
 
     private Ingredient mapRowToIngredient(ResultSet row, int rowNum) throws SQLException {
