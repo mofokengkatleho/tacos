@@ -5,6 +5,7 @@ import katleho.tacos.model.Ingredient.Type;
 import katleho.tacos.model.Taco;
 
 import katleho.tacos.model.TacoOrder;
+import katleho.tacos.repository.IngredientRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,36 +17,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Controller
 @RequestMapping("/design")
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
+    private final IngredientRepository ingredientRepository;
+
+    public DesignTacoController(IngredientRepository ingredientRepository) {
+        this.ingredientRepository = ingredientRepository;
+    }
 
     @ModelAttribute
     public void addIngredientsToModel(Model model){
-        List<Ingredient> ingredientList = Arrays.asList(
-                new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
-                new Ingredient("GRBF", "Ground Beef", Ingredient.Type.PROTEIN),
-                new Ingredient("CARN", "Carnitas", Ingredient.Type.PROTEIN),
-                new Ingredient("TMTO", "Diced Tomatoes", Ingredient.Type.VEGGIES),
-                new Ingredient("LETC", "Lettuce", Ingredient.Type.VEGGIES),
-                new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
-                new Ingredient("JACK", "Monterrey Jack", Ingredient.Type.CHEESE),
-                new Ingredient("SLSA", "Salsa", Ingredient.Type.SAUCE),
-                new Ingredient("SRCR", "Sour Cream", Ingredient.Type.SAUCE)
-        );
-
+        Iterable<Ingredient> ingredients = ingredientRepository.findAll();
         Arrays.stream(Ingredient.Type.values())
-                .forEach(ingredient -> model.addAttribute(ingredient.toString().toLowerCase(),
-                        filterByType(ingredientList,ingredient)));
+                .forEach(ingredientType -> model.addAttribute(ingredientType.toString().toLowerCase(),
+                        filterByType(ingredients,ingredientType)));
     }
 
-    private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, Type type){
-        return ingredients.
-                stream()
+    private Iterable<Ingredient> filterByType(Iterable<Ingredient> ingredients, Type type){
+        return StreamSupport.stream(ingredients.spliterator(),false)
                 .filter(ingredient -> ingredient.getType().equals(type))
                 .collect(Collectors.toList());
     }
