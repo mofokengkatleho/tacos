@@ -1,7 +1,9 @@
 package katleho.tacos.repository;
 
+import katleho.tacos.model.IngredientRef;
 import katleho.tacos.model.Taco;
 import katleho.tacos.model.TacoOrder;
+import org.springframework.asm.Type;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
@@ -37,7 +39,7 @@ public class OrderRepositoryImpl implements OrderRepository{
         preparedStatementCreatorFactory.setReturnGeneratedKeys(true);
 
         tacoOrder.setPlacedAt(new Date());
-        PreparedStatementCreator psc =
+        PreparedStatementCreator preparedStatementCreator =
                 preparedStatementCreatorFactory.newPreparedStatementCreator(
                         Arrays.asList(
                                 tacoOrder.getDeliveryName(),
@@ -51,16 +53,48 @@ public class OrderRepositoryImpl implements OrderRepository{
                                 tacoOrder.getPlacedAt()));
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcOperations.update(psc, keyHolder);
-        long orderId = keyHolder.getKey().longValue();
-        tacoOrder.setId(orderId);
+        jdbcOperations.update(preparedStatementCreator, keyHolder);
+        long tacoOrderId = keyHolder.getKey().longValue();
+        tacoOrder.setId(tacoOrderId);
 
         List<Taco> tacos = tacoOrder.getTacos();
         int i=0;
         for (Taco taco : tacos) {
-            saveTaco(orderId, i++, taco);
+            saveTaco(tacoOrderId, i++, taco);
         }
         return tacoOrder;
     }
     private long saveTaco(Long orderId, int orderKey, Taco taco) {
+        taco.setCreatedAt(new Date());
+        PreparedStatementCreatorFactory preparedStatementCreatorFactory =
+                new PreparedStatementCreatorFactory(
+                        "insert into Taco "
+                                + "(name, created_at, taco_order, taco_order_key) "
+                                + "values (?, ?, ?, ?)",
+                        Types.VARCHAR, Types.TIMESTAMP, Type.LONG, Type.LONG
+                );
+        preparedStatementCreatorFactory.setReturnGeneratedKeys(true);
+
+        PreparedStatementCreator preparedStatementCreator =
+                preparedStatementCreatorFactory.newPreparedStatementCreator(
+                        Arrays.asList(
+                                taco.getName(),
+                                taco.getCreatedAt(),
+                                orderId,
+                                orderKey));
+
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcOperations.update(preparedStatementCreator, keyHolder);
+        long tacoId = keyHolder.getKey().longValue();
+        taco.setId(tacoId);
+
+        saveIngredientRefs(tacoId, taco.getIngredients());
+
+        return tacoId;
+    }
+
+    private void saveIngredientRefs(
+            long tacoId, List<IngredientRef> ingredientRefs) {
+    }
+    }
 }
