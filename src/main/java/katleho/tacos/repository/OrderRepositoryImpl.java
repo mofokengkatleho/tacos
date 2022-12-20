@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class OrderRepositoryImpl implements OrderRepository{
+public class OrderRepositoryImpl implements OrderRepository {
     private JdbcOperations jdbcOperations;
 
     public OrderRepositoryImpl(JdbcOperations jdbcOperations) {
@@ -58,12 +58,13 @@ public class OrderRepositoryImpl implements OrderRepository{
         tacoOrder.setId(tacoOrderId);
 
         List<Taco> tacos = tacoOrder.getTacos();
-        int i=0;
+        int i = 0;
         for (Taco taco : tacos) {
             saveTaco(tacoOrderId, i++, taco);
         }
         return tacoOrder;
     }
+
     private long saveTaco(Long orderId, int orderKey, Taco taco) {
         taco.setCreatedAt(new Date());
         PreparedStatementCreatorFactory preparedStatementCreatorFactory =
@@ -93,8 +94,13 @@ public class OrderRepositoryImpl implements OrderRepository{
         return tacoId;
     }
 
-    private void saveIngredientRefs(
-            long tacoId, List<IngredientRef> ingredientRefs) {
-    }
+    private void saveIngredientRefs(long tacoId, List<IngredientRef> ingredientRefs) {
+        int key = 0;
+        for (IngredientRef ingredientRef : ingredientRefs) {
+            jdbcOperations.update(
+                    "insert into Ingredient_Ref (ingredient, taco, taco_key) "
+                            + "values (?, ?, ?)",
+                    ingredientRef.getIngredient(), tacoId, key++);
+        }
     }
 }
