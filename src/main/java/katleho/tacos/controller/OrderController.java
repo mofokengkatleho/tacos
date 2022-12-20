@@ -1,6 +1,7 @@
 package katleho.tacos.controller;
 
 import katleho.tacos.model.TacoOrder;
+import katleho.tacos.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -17,6 +18,11 @@ import javax.validation.Valid;
 @SessionAttributes("tacoOrder")
 @Slf4j
 public class OrderController {
+    private OrderRepository orderRepository;
+
+    public OrderController(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     @GetMapping
     public String orderForm(){
@@ -27,7 +33,8 @@ public class OrderController {
     public String processOrder(@Valid TacoOrder tacoOrder, Errors errors, SessionStatus status){
         if(errors.hasErrors())
             return "orderForm";
-        log.info("Order submitted: {}",tacoOrder);
+        orderRepository.save(tacoOrder);
+//        log.info("Order submitted: {}",tacoOrder);
         status.setComplete();
         return "redirect:/";
     }
