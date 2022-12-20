@@ -66,7 +66,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     private long saveTaco(Long orderId, int orderKey, Taco taco) {
-        taco.setCreatedAt(new Date());
+        taco.setDateCreated(new Date());
         PreparedStatementCreatorFactory preparedStatementCreatorFactory =
                 new PreparedStatementCreatorFactory(
                         "insert into Taco "
@@ -80,7 +80,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 preparedStatementCreatorFactory.newPreparedStatementCreator(
                         Arrays.asList(
                                 taco.getName(),
-                                taco.getCreatedAt(),
+                                taco.getDateCreated(),
                                 orderId,
                                 orderKey));
 
