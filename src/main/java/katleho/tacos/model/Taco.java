@@ -1,6 +1,8 @@
 package katleho.tacos.model;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Data
 public class Taco {
+    @Id
     private Long id;
     private Date dateCreated = new Date();
     @NotNull
