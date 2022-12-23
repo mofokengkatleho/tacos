@@ -1,5 +1,6 @@
-package katleho.tacos.model;
+package katleho.tacos.configuration;
 
+import katleho.tacos.model.User;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
