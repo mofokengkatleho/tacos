@@ -1,6 +1,6 @@
 package katleho.tacos.controller;
 
-import katleho.tacos.model.RegistrationForm;
+import katleho.tacos.configuration.RegistrationForm;
 import katleho.tacos.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
