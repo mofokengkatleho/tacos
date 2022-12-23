@@ -33,7 +33,9 @@ public class SecurityConfig {
                 .antMatchers("/design","/orders").hasRole("USER")
                 .antMatchers("/","/**").permitAll()
                 .and()
+                .formLogin()
+                .loginPage("/login")
+                .and()
                 .build();
-
     }
 }
