@@ -26,6 +26,7 @@ public class SecurityConfig {
             throw new UsernameNotFoundException("User '"+ username+"' not found");
         };
     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
