@@ -1,8 +1,10 @@
 package katleho.tacos.controller;
 
 import katleho.tacos.model.TacoOrder;
+import katleho.tacos.model.User;
 import katleho.tacos.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +32,12 @@ public class OrderController {
     }
 
     @PostMapping
-    public String processOrder(@Valid TacoOrder tacoOrder, Errors errors, SessionStatus status){
+    public String processOrder(@Valid TacoOrder tacoOrder, Errors errors, SessionStatus status,
+                               @AuthenticationPrincipal User user){
         if(errors.hasErrors())
             return "orderForm";
+
+        tacoOrder.setUser(user);
         orderRepository.save(tacoOrder);
 //        log.info("Order submitted: {}",tacoOrder);
         status.setComplete();
